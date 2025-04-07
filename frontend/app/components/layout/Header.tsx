@@ -36,6 +36,12 @@ export default function Header() {
                 Appointments
               </Link>
               <Link
+                href="/blog"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900"
+              >
+                Health Tips
+              </Link>
+              <Link
                 href="/about"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900"
               >

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="bg-gray-50">
@@ -31,19 +33,19 @@ export default function Footer() {
                 </h3>
                 <ul className="mt-4 space-y-4">
                   <li>
-                    <a href="/doctors" className="text-base text-gray-500 hover:text-gray-900">
+                    <Link href="/doctors" className="text-base text-gray-500 hover:text-gray-900">
                       Find Doctors
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/specialties" className="text-base text-gray-500 hover:text-gray-900">
+                    <Link href="/specialties" className="text-base text-gray-500 hover:text-gray-900">
                       Browse Specialties
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/appointments" className="text-base text-gray-500 hover:text-gray-900">
+                    <Link href="/appointments" className="text-base text-gray-500 hover:text-gray-900">
                       Book Appointment
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -53,14 +55,14 @@ export default function Footer() {
                 </h3>
                 <ul className="mt-4 space-y-4">
                   <li>
-                    <a href="/auth/register" className="text-base text-gray-500 hover:text-gray-900">
+                    <Link href="/auth/register" className="text-base text-gray-500 hover:text-gray-900">
                       Join as Doctor
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/auth/login" className="text-base text-gray-500 hover:text-gray-900">
+                    <Link href="/auth/login" className="text-base text-gray-500 hover:text-gray-900">
                       Doctor Login
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -72,14 +74,14 @@ export default function Footer() {
                 </h3>
                 <ul className="mt-4 space-y-4">
                   <li>
-                    <a href="/about" className="text-base text-gray-500 hover:text-gray-900">
+                    <Link href="/about" className="text-base text-gray-500 hover:text-gray-900">
                       About Us
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/contact" className="text-base text-gray-500 hover:text-gray-900">
+                    <Link href="/contact" className="text-base text-gray-500 hover:text-gray-900">
                       Contact
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -89,14 +91,19 @@ export default function Footer() {
                 </h3>
                 <ul className="mt-4 space-y-4">
                   <li>
-                    <a href="/privacy" className="text-base text-gray-500 hover:text-gray-900">
+                    <Link href="/privacy" className="text-base text-gray-500 hover:text-gray-900">
                       Privacy Policy
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/terms" className="text-base text-gray-500 hover:text-gray-900">
+                    <Link href="/terms" className="text-base text-gray-500 hover:text-gray-900">
                       Terms of Service
-                    </a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/blog" className="text-base text-gray-500 hover:text-gray-900">
+                      Health Tips
+                    </Link>
                   </li>
                 </ul>
               </div>

@@ -1,10 +1,14 @@
 <?php
 
 use App\Http\Controllers\Api\AppointmentController;
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ChamberController;
 use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\FaqController;
+use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\ScheduleController;
+use App\Http\Controllers\Api\SettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +30,22 @@ Route::get('chambers/{chamber}/schedules', [ChamberController::class, 'schedules
 
 Route::post('appointments', [AppointmentController::class, 'store']);
 Route::get('appointments/{appointment}', [AppointmentController::class, 'show']);
+
+// Blog routes
+Route::get('blogs', [BlogController::class, 'index']);
+Route::get('blogs/{blog}', [BlogController::class, 'show']);
+
+// FAQ routes
+Route::get('faqs', [FaqController::class, 'index']);
+Route::get('faqs/{faq}', [FaqController::class, 'show']);
+
+// Page routes
+Route::get('pages', [PageController::class, 'index']);
+Route::get('pages/{page}', [PageController::class, 'show']);
+
+// Settings routes
+Route::get('settings', [SettingController::class, 'index']);
+Route::get('settings/{key}', [SettingController::class, 'show']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

@@ -1,7 +1,68 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { pageService, Page } from '../services/api';
 
 export default function AboutPage() {
+  const [pageContent, setPageContent] = useState<Page | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchPageContent = async () => {
+      try {
+        setLoading(true);
+        const response = await pageService.getPageBySlug('about');
+        setPageContent(response);
+      } catch (err) {
+        console.error('Error fetching About page content:', err);
+        setError('Failed to load page content. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPageContent();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p>Loading content...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-red-500">
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If we have dynamic content, use it, otherwise fall back to the static content
+  if (pageContent && pageContent.content) {
+    return (
+      <div className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">{pageContent.title}</h1>
+          </div>
+          <div className="mt-12 prose prose-blue prose-lg mx-auto" 
+               dangerouslySetInnerHTML={{ __html: pageContent.content }} />
+        </div>
+      </div>
+    );
+  }
+  
+  // Fallback to static content if API fails or returns empty content
   return (
     <div className="bg-white">
       {/* Hero section */}
