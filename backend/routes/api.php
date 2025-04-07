@@ -74,4 +74,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('appointments', [AppointmentController::class, 'index']);
     Route::put('appointments/{appointment}/confirm', [AppointmentController::class, 'confirm']);
     Route::put('appointments/{appointment}/cancel', [AppointmentController::class, 'cancel']);
+
+    // Blog management
+    Route::post('blogs', [BlogController::class, 'store']);
+    Route::post('blogs/{blog}/photo', [BlogController::class, 'uploadPhoto']);
+    Route::put('blogs/{blog}', [BlogController::class, 'update']);
+    Route::delete('blogs/{blog}', [BlogController::class, 'destroy']);
+
+    // FAQ management
+    Route::post('faqs', [FaqController::class, 'store']);
+    Route::put('faqs/{faq}', [FaqController::class, 'update']);
+    Route::delete('faqs/{faq}', [FaqController::class, 'destroy']);
+
+    // Page management
+    Route::post('pages', [PageController::class, 'store']);
+    Route::put('pages/{page}', [PageController::class, 'update']);
+    Route::delete('pages/{page}', [PageController::class, 'destroy']);
+
+    // Settings management
+    Route::post('settings', [SettingController::class, 'store']);
+    Route::put('settings/{key}', [SettingController::class, 'update']);
+    Route::delete('settings/{key}', [SettingController::class, 'destroy']);
 });
