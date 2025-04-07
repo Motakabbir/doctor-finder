@@ -1,0 +1,57 @@
+<?php
+
+use App\Http\Controllers\Api\AppointmentController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ChamberController;
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\ScheduleController;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
+
+// Public routes
+Route::get('categories', [CategoryController::class, 'index']);
+Route::get('categories/{category}', [CategoryController::class, 'show']);
+
+Route::get('doctors', [DoctorController::class, 'index']);
+Route::get('doctors/{doctor}', [DoctorController::class, 'show']);
+Route::get('doctors/{doctor}/schedules', [DoctorController::class, 'schedules']);
+Route::get('doctors/{doctor}/chambers', [DoctorController::class, 'chambers']);
+
+Route::get('chambers/{chamber}/schedules', [ChamberController::class, 'schedules']);
+
+Route::post('appointments', [AppointmentController::class, 'store']);
+Route::get('appointments/{appointment}', [AppointmentController::class, 'show']);
+
+// Protected routes
+Route::middleware('auth:sanctum')->group(function () {
+    // Categories management
+    Route::post('categories', [CategoryController::class, 'store']);
+    Route::put('categories/{category}', [CategoryController::class, 'update']);
+    Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
+
+    // Doctors management
+    Route::post('doctors', [DoctorController::class, 'store']);
+    Route::post('doctors/{doctor}/photo', [DoctorController::class, 'uploadPhoto']);
+    Route::put('doctors/{doctor}', [DoctorController::class, 'update']);
+    Route::delete('doctors/{doctor}', [DoctorController::class, 'destroy']);
+
+    // Chambers management
+    Route::post('doctors/{doctor}/chambers', [ChamberController::class, 'store']);
+    Route::put('chambers/{chamber}', [ChamberController::class, 'update']);
+    Route::delete('chambers/{chamber}', [ChamberController::class, 'destroy']);
+
+    // Schedules management
+    Route::post('doctors/{doctor}/schedules', [ScheduleController::class, 'store']);
+    Route::put('schedules/{schedule}', [ScheduleController::class, 'update']);
+    Route::delete('schedules/{schedule}', [ScheduleController::class, 'destroy']);
+
+    // Appointments management
+    Route::get('appointments', [AppointmentController::class, 'index']);
+    Route::put('appointments/{appointment}/confirm', [AppointmentController::class, 'confirm']);
+    Route::put('appointments/{appointment}/cancel', [AppointmentController::class, 'cancel']);
+});
