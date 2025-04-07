@@ -23,7 +23,7 @@ return new class extends Migration
             $table->text('cancellation_reason')->nullable();
             $table->timestamps();
 
-            $table->unique(['doctor_id', 'chamber_id', 'appointment_date', 'appointment_time']);
+            $table->unique(['doctor_id', 'chamber_id', 'appointment_date', 'appointment_time'], 'appt_schedule_unique');
         });
     }
 
