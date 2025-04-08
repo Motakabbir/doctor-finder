@@ -5,17 +5,37 @@ import Link from 'next/link';
 import { blogService, Blog } from '../services/api';
 import { format } from 'date-fns';
 
-export default function BlogPage() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+export default function BlogPage() {  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const postsPerPage = 9;
 
+  const categories = [
+    'All Categories',
+    'Wellness',
+    'Mental Health',
+    'Nutrition',
+    'Fitness',
+    'Chronic Care',
+    'Sleep',
+    'Preventive Care'
+  ];
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const response = await blogService.getBlogs();
+        const response = await blogService.getBlogs({
+          page: currentPage,
+          per_page: postsPerPage,
+          search: searchTerm,
+          category: selectedCategory
+        });
         setBlogs(response.data);
+        setTotalPages(Math.ceil(response.total / postsPerPage));
       } catch (err) {
         console.error('Error fetching blogs:', err);
         setError('Failed to load blog posts. Please try again later.');
@@ -24,8 +44,10 @@ export default function BlogPage() {
       }
     };
 
-    fetchBlogs();
-  }, []);
+    // Add debounce for search
+    const timeoutId = setTimeout(fetchBlogs, 300);
+    return () => clearTimeout(timeoutId);
+  }, [currentPage, searchTerm, selectedCategory]);
 
   // Function to estimate reading time based on content length
   const getReadingTime = (content: string) => {
@@ -48,10 +70,47 @@ export default function BlogPage() {
     <div className="bg-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">Health Tips & Articles</h1>
-          <p className="mt-4 text-lg text-gray-500">
+          <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">Health Tips & Articles</h1>          <p className="mt-4 text-lg text-gray-500">
             Expert advice and insights to help you maintain optimal health
           </p>
+        </div>
+
+        {/* Search and Filter */}
+        <div className="mt-8 max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="search" className="block text-sm font-medium text-gray-700">Search</label>
+              <input
+                type="text"
+                id="search"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                placeholder="Search articles..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
+              <select
+                id="category"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                value={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setCurrentPage(1);
+                }}
+              >
+                {categories.map((category) => (
+                  <option key={category} value={category === 'All Categories' ? '' : category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
         {loading ? (
@@ -106,7 +165,31 @@ export default function BlogPage() {
               <div className="col-span-3 text-center py-10">
                 <p>No blog posts found.</p>
               </div>
-            )}
+            )}          </div>
+        )}
+
+        {/* Pagination */}
+        {!loading && !error && blogs.length > 0 && (
+          <div className="mt-12">
+            <nav className="flex items-center justify-center" aria-label="Pagination">
+              <button
+                onClick={() => setCurrentPage(page => Math.max(1, page - 1))}
+                disabled={currentPage === 1}
+                className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Previous
+              </button>
+              <div className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border-t border-b">
+                Page {currentPage} of {totalPages}
+              </div>
+              <button
+                onClick={() => setCurrentPage(page => Math.min(totalPages, page + 1))}
+                disabled={currentPage === totalPages}
+                className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+            </nav>
           </div>
         )}
 

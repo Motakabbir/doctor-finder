@@ -3,6 +3,9 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import AuthService from '@/app/services/auth.service';
+import { NotificationProvider } from '@/app/components/admin/NotificationContext';
+import Notifications from '@/app/components/admin/Notifications';
 
 export default function AdminLayout({
   children,
@@ -10,19 +13,21 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-
-  // TODO: Add proper authentication check
   useEffect(() => {
-    // Temporary authentication check
-    const isAuthenticated = localStorage.getItem('adminToken');
-    if (!isAuthenticated) {
-      router.push('/admin/login');
-    }
+    const checkAuth = async () => {
+      const isAuthenticated = AuthService.isAuthenticated();
+      if (!isAuthenticated && !window.location.pathname.includes('/admin/login')) {
+        router.push('/admin/login');
+      }
+    };
+    
+    checkAuth();
   }, [router]);
-
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-md">
+    <NotificationProvider>
+      <div className="min-h-screen bg-gray-100">
+        <Notifications />
+        <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
@@ -59,9 +64,8 @@ export default function AdminLayout({
               </div>
             </div>
             <div className="flex items-center">
-              <button
-                onClick={() => {
-                  localStorage.removeItem('adminToken');
+              <button                onClick={() => {
+                  AuthService.logout();
                   router.push('/admin/login');
                 }}
                 className="text-gray-500 hover:text-gray-700"
@@ -74,8 +78,8 @@ export default function AdminLayout({
       </nav>
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {children}
-      </main>
+        {children}      </main>
     </div>
+    </NotificationProvider>
   );
 }
